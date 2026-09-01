@@ -18,7 +18,7 @@
 - Пробивка Wordstat/Keys.so. Нет 50+ живых НЧ — режем pSEO.
 - «Квартира × стиль» не комбо.
 
-**Выход:** `url | cluster | freq | h1 | title | template | index`.
+**Выход:** `url | cluster | freq | h1 | title | template | index`. Список фраз и гео: `docs/semantics.md`. Живой Wordstat — под логином Яндекса, не из агента.
 
 ## Фаза 2 — коммерция + CMS вместе
 

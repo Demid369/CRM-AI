@@ -7,4 +7,5 @@
 - [Архитектура](docs/ARCHITECTURE.md)
 - [Таксономия](docs/taxonomy.md)
 - [План](docs/PLAN.md)
+- [Семантика и гео](docs/semantics.md)
 - [Аудит пробелов](docs/architecture-audit.md) — юридика, GPU, воронка, CWV
