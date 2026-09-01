@@ -7,3 +7,4 @@
 - [Архитектура](docs/ARCHITECTURE.md)
 - [Таксономия](docs/taxonomy.md)
 - [План](docs/PLAN.md)
+- [Аудит пробелов](docs/architecture-audit.md) — юридика, GPU, воронка, CWV
