@@ -113,7 +113,7 @@
 | Проект | `/raboty/{slug}` | Кейс с паспортом; H1 объекта, не «кухня лофт» | условно |
 | ЛК / API | `/lk`, `/api` | Генерации, заявка | нет |
 
-Хаб стиля — не Wikipedia (InMyRoom не обгоним справочником). H1: «Визуализация интерьера в стиле {С}». Комбо: «{Комната} в стиле {С}». Два URL с «кухня»+«лофт» в title запрещены.
+Хаб стиля — не Wikipedia (InMyRoom не обгоним справочником). H1: «Визуализация интерьера в стиле {С}». Комбо: «Визуализация {комнаты} в стиле {С}» — не «кухня лофт» без слова «визуализация». Два URL с «кухня»+«лофт» в title запрещены. Бренды мебели не в title.
 
 Формулы title/H1 — `docs/taxonomy.md` §9. Без них каннибал родится в шаблоне.
 
@@ -152,7 +152,9 @@ ObjectType     slug, domain, index_policy
 
 Service        5–6 статических /uslugi/*, не ось комбо
 Redirect       from_path, to_path, 301|410
-Image          project_id, room_id?, origin, alt, caption, sort, path
+Image          project_id, room_id?, origin, rights, alt, caption, sort, path
+               -- origin: studio | campaign
+               -- rights: ok | nda | pending | anonymize | white_label
 UrlRegistry    path UNIQUE, entity, index_policy, lastmod   -- SSG/sitemap
 
 Project        domain, primary_style_id, extra_style_ids[],
@@ -165,13 +167,15 @@ Project        domain, primary_style_id, extra_style_ids[],
 LandingCombo   style_id + room_id only
                h1, title, meta — ручные
                pinned[] / excluded[] поверх query(Project)
-               index только если wordstat_at + intro + ≥4 studio-кадра ЭТОЙ пары
+               index только если wordstat_at + intro
+                 + ≥4 кадра origin=studio AND rights=ok ЭТОЙ пары
 
 -- GenerationJob / CreditLedger не создавать до фазы генератора
-Lead           форма заявки, без кредитов
+Lead           Payload на t9: имя, TG|телефон, тип, статус
+               Telegram: «заявка №N», без телефона и файла
 ```
 
-Инварианты в миграции: `Room.slug ∩ ObjectType.slug = ∅`; комбо только `Style.domain=interior`; проект `index=true` при ≥3–4 `origin=studio` + паспорт; SSG читает только `UrlRegistry`.
+Инварианты в миграции: `Room.slug ∩ ObjectType.slug = ∅`; комбо только `Style.domain=interior`; проект `index=true` при ≥3–4 `origin=studio` + `rights=ok` + паспорт; SSG читает только `UrlRegistry`. Без акта фрилансера `rights≠ok`.
 
 `city` / район / серия дома — уникальность карточки, не ЧПУ.
 
@@ -282,6 +286,8 @@ Lead           форма заявки, без кредитов
 16. **Один оффер на всех** — два входа: частник и дизайнер. Риелтор вычеркнут. Застройщик не в шапке.
 17. **Цена «от» без полки** — пакеты 3/6/10, не ₽/м² в H1, не эконом 350–800.
 18. **Правки без протокола** — референс ≠ ТЗ, 2 итерации в утверждённой модели, сцена не «в подарок».
+19. **Кадры без прав** — гейт считает `rights=ok`, не штуки PNG. NDA и white-label не в индекс.
+20. **Форма ≠ контур ПДн** — `Lead` на t9 до первой заявки. Formspree / Gmail / телефон в Telegram — дыра.
 
 ## 12. Публикация, robots, гейт качества
 
@@ -292,20 +298,20 @@ Sitemap: `sitemap-core.xml`, `sitemap-hubs.xml`, `sitemap-combos.xml`, `sitemap-
 Гейт перед `published`:
 
 - есть кластер и частотность (комбо) или уникальный проект;
-- ≥4 своих кадра (комбо) / ≥3 (проект);
+- ≥4 кадра `origin=studio` + `rights=ok` (комбо) / ≥3 (проект);
 - заполнены уникальные поля (не общий абзац);
 - внутренние ссылки на родителя и 3 соседа;
 - одна H1, уникальные title/description;
-- `origin` кадра проставлен;
+- `origin` и `rights` проставлены;
 - для комбо нет второй каноники в каталоге.
 
 70% считаем **двумя** гейтами (не Advego «vs интернет» как единственная цифра):
 
 1. **Данные.** Доля символов в уникальных полях + подписи к кадрам / смысловое тело (минус навигация и виджет) ≥ 0.70. Минимум 6 из 10 полей проекта реально разные у соседа (метраж, район, серия дома, год, задача, ограничения, материалы, ошибка, свои pHash-кадры, связи).
-2. **Семантика.** Эмбеддинги смыслового тела (multilingual-e5 / rubert): max cosine с сиблингами того же шаблона < 0.72. Иначе `draft`.
-3. Картинки: pHash без коллизий со стоком и другими карточками.
+2. **Семантика.** В пилоте — чеклист в админке (intro не скопирован, 6 полей разные у соседа). Эмбеддинги cosine < 0.72 — с волны 2, не блокер первого релиза.
+3. Картинки: pHash без коллизий; в индекс только `origin=studio` + `rights=ok`.
 
-Если ниже — не публикуем, не «докручиваем водой». CI до `published`.
+Если ниже — не публикуем, не «докручиваем водой». «Опубликовать все draft» запрещено.
 
 Редиректы синонимов: `zal`→`gostinaya`, `sovremennyj`←`contemporary`/`kontemporari`, `art-deco`→`ar-deko`. Одна карта в CMS, 301 навсегда.
 
@@ -317,4 +323,4 @@ Sitemap: `sitemap-core.xml`, `sitemap-hubs.xml`, `sitemap-combos.xml`, `sitemap-
 - Пилот считается в десятках URL, не в тысячах.
 - Юридика и ЛК не блокируют запуск витрины: виджет можно прикрутить второй очередью.
 
-Детализация осей: `docs/taxonomy.md`. Порядок работ: `docs/PLAN.md`. Каналы, SKU, ёмкость, CAC: `docs/gtm.md`. Жёсткий аудит пробелов (юридика, GPU, воронка, CWV): `docs/architecture-audit.md`.
+Детализация осей: `docs/taxonomy.md`. Порядок работ: `docs/PLAN.md`. Каналы, SKU, ёмкость, CAC: `docs/gtm.md`. Операции пилота (права, лид, t9, 54-ФЗ): `docs/pilot-ops.md`. Жёсткий аудит пробелов (юридика, GPU, воронка, CWV): `docs/architecture-audit.md`.
