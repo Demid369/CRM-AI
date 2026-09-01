@@ -11,3 +11,4 @@
 - [GTM и юнит-экономика](docs/gtm.md) — каналы, SKU, ёмкость, CAC
 - [Варианты и дыры](docs/VARIANTS.md)
 - [Аудит пробелов](docs/architecture-audit.md) — юридика, GPU, воронка, CWV
+- [Операционка пилота](docs/pilot-ops.md) — кадры/NDA, инфо-комбо, CMS, лиды, t9, 54-ФЗ

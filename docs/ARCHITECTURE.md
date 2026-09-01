@@ -278,4 +278,4 @@ Sitemap: `sitemap-core.xml`, `sitemap-hubs.xml`, `sitemap-combos.xml`, `sitemap-
 - Пилот считается в десятках URL, не в тысячах.
 - Юридика и ЛК не блокируют запуск витрины: виджет можно прикрутить второй очередью.
 
-Детализация осей: `docs/taxonomy.md`. Порядок работ: `docs/PLAN.md`. Каналы, SKU, ёмкость, CAC: `docs/gtm.md`. Жёсткий аудит пробелов (юридика, GPU, воронка, CWV): `docs/architecture-audit.md`.
+Детализация осей: `docs/taxonomy.md`. Порядок работ: `docs/PLAN.md`. Каналы, SKU, ёмкость, CAC: `docs/gtm.md`. Жёсткий аудит пробелов (юридика, GPU, воронка, CWV): `docs/architecture-audit.md`. Операционные дыры пилота (права на кадры, инфо-комбо, CMS, лиды, t9, 54-ФЗ): `docs/pilot-ops.md`.
