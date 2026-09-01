@@ -8,5 +8,6 @@
 - [Таксономия](docs/taxonomy.md)
 - [План](docs/PLAN.md)
 - [Семантика и гео](docs/semantics.md)
+- [GTM и юнит-экономика](docs/gtm.md) — каналы, SKU, ёмкость, CAC
 - [Варианты и дыры](docs/VARIANTS.md)
 - [Аудит пробелов](docs/architecture-audit.md) — юридика, GPU, воронка, CWV
